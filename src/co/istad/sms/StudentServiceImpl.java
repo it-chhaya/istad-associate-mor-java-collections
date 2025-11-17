@@ -2,9 +2,9 @@ package co.istad.sms;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-public class StudentServiceImpl implements
-StudentService {
+public class StudentServiceImpl implements StudentService {
 
     // Variant 2
     private final StudentDatabase studentDatabase;
@@ -13,6 +13,31 @@ StudentService {
         studentDatabase = new StudentDatabase();
     }
 
+
+    @Override
+    public void deleteStudentById(Integer id) {
+        // TODO
+        List<Student> students = studentDatabase.getStudents()
+                .stream()
+                .filter(student -> !student.getId().equals(id))
+                .collect(Collectors.toList());
+        studentDatabase.setStudents(students);
+    }
+
+    @Override
+    public void updateStudentById(Integer id, Student newStudent) {
+        List<Student> students = studentDatabase.getStudents()
+                .stream()
+                .peek(student -> {
+                    if (student.getId().equals(id)) {
+                        student.setName(newStudent.getName());
+                        student.setGender(newStudent.getGender());
+                        student.setScore(newStudent.getScore());
+                    }
+                })
+                .collect(Collectors.toList());
+        studentDatabase.setStudents(students);
+    }
 
     @Override
     public void addStudent(Student student) {

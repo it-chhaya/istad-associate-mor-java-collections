@@ -64,7 +64,7 @@ public class SmsApp {
                             else if(scoreOpt == 2) {
                                 isOrder = false;
                             } else {
-                                System.out.println("Gender option is invalid..!");
+                                System.out.println("Order option is invalid..!");
                             }
                             List<Student> students = studentService.findStudentByScore(scoreForSearch, isOrder);
                             DisplayUtil.table(students);
@@ -83,9 +83,19 @@ public class SmsApp {
                 }
                 case 4 -> {
                     DisplayUtil.print("Update student by ID", true);
+                    Integer id = InputUtil.getInteger("Enter ID: ");
+                    String name = InputUtil.getText("Enter name: ");
+                    String gender = InputUtil.getText("Enter gender: ");
+                    Double score = InputUtil.getDouble("Enter score: ");
+                    Student newStudent = new Student(name, gender, score);
+                    studentService.updateStudentById(id, newStudent);
+                    DisplayUtil.showSuccessMsg("Student updated");
                 }
                 case 5 -> {
                     DisplayUtil.print("Delete student by ID", true);
+                    Integer id = InputUtil.getInteger("Enter ID: ");
+                    studentService.deleteStudentById(id);
+                    DisplayUtil.showSuccessMsg("Student deleted");
                 }
                 case 0 -> System.exit(0);
                 default -> throw new IllegalStateException();

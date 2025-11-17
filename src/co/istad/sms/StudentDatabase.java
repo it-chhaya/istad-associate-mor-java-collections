@@ -40,6 +40,10 @@ public class StudentDatabase {
         students.add(student4);
     }
 
+    public void setStudents(List<Student> students) {
+        this.students = students;
+    }
+
     public List<Student> getStudents() {
         return students;
     }
