@@ -53,7 +53,7 @@ public class StudentDatabase {
     }
 
     private Integer autoId() {
-        return students.size() + 1;
+        return students.getLast().getId() + 1;
     }
 
     public void addStudent(Student student) {
