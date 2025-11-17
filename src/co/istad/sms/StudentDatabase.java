@@ -22,8 +22,22 @@ public class StudentDatabase {
         student2.setGender("Female");
         student2.setScore(95.99);
 
+        Student student3 = new Student();
+        student3.setId(3);
+        student3.setName("Tola");
+        student3.setGender("Male");
+        student3.setScore(50.6);
+
+        Student student4 = new Student();
+        student4.setId(4);
+        student4.setName("Vicheka");
+        student4.setGender("Female");
+        student4.setScore(70.99);
+
         students.add(student1);
         students.add(student2);
+        students.add(student3);
+        students.add(student4);
     }
 
     public List<Student> getStudents() {

@@ -1,12 +1,11 @@
 package co.istad.sms;
 
-import org.nocrala.tools.texttablefmt.BorderStyle;
-import org.nocrala.tools.texttablefmt.Table;
+import java.util.List;
 
 public class SmsApp {
     public static void main(String[] args) {
 
-        StudentDatabase studentDb = new StudentDatabase();
+        StudentService studentService = new StudentServiceImpl();
 
         do {
             System.out.println("--------------");
@@ -16,37 +15,77 @@ public class SmsApp {
 
             switch (menuNo) {
                 case 1 -> {
-                    DisplayUtil.print("Student List");
-                    Table table = new Table(4, BorderStyle.UNICODE_ROUND_BOX_WIDE);
-                    table.addCell("ID");
-                    table.addCell("NAME");
-                    table.addCell("GENDER");
-                    table.addCell("SCORE");
-                    for (Student student : studentDb.getStudentsDesc()) {
-                        table.addCell(student.getId().toString());
-                        table.addCell(student.getName());
-                        table.addCell(student.getGender());
-                        table.addCell(student.getScore().toString());
-                    }
-                    DisplayUtil.print(table.render());
+                    DisplayUtil.print("Student List", true);
+                    DisplayUtil.table(studentService.findAll());
                 }
                 case 2 -> {
-                    DisplayUtil.print("Search student by ID, NAME, GENDER, SCORE");
+                    DisplayUtil.print("Search student by ID, NAME, GENDER, SCORE", true);
+                    DisplayUtil.print("1. ID", true);
+                    DisplayUtil.print("2. NAME", true);
+                    DisplayUtil.print("3. GENDER", true);
+                    DisplayUtil.print("4. SCORE", true);
+                    int option = InputUtil.getInteger("Enter option to search: ");
+
+                    switch (option) {
+                        case 1 -> {
+                            int idForSearch = InputUtil.getInteger("Enter ID: ");
+                            Student foundStudent = studentService.findStudentById(idForSearch);
+                            DisplayUtil.table(foundStudent);
+                        }
+                        case 2 -> {
+                            String nameForSearch = InputUtil.getText("Enter NAME: ");
+                            List<Student> foundStudents = studentService
+                                    .findStudentByName(nameForSearch);
+                            DisplayUtil.table(foundStudents);
+                        }
+                        case 3 -> {
+                            DisplayUtil.print("1. Female", true);
+                            DisplayUtil.print("2. Male", true);
+                            int genderOpt = InputUtil.getInteger("Enter option: ");
+                            String foundGender = "";
+                            if (genderOpt == 1)
+                                foundGender = "female";
+                            else if(genderOpt == 2) {
+                                foundGender = "male";
+                            } else {
+                                System.out.println("Gender option is invalid..!");
+                            }
+                            List<Student> students = studentService.findStudentByGender(foundGender);
+                            DisplayUtil.table(students);
+                        }
+                        case 4 -> {
+                            Double scoreForSearch = InputUtil.getDouble("Enter SCORE: ");
+                            DisplayUtil.print("1. ASC", true);
+                            DisplayUtil.print("2. DESC", true);
+                            int scoreOpt = InputUtil.getInteger("Enter option: ");
+                            Boolean isOrder = null;
+                            if (scoreOpt == 1)
+                                isOrder = true;
+                            else if(scoreOpt == 2) {
+                                isOrder = false;
+                            } else {
+                                System.out.println("Gender option is invalid..!");
+                            }
+                            List<Student> students = studentService.findStudentByScore(scoreForSearch, isOrder);
+                            DisplayUtil.table(students);
+                        }
+                        default -> throw new IllegalStateException();
+                    }
                 }
                 case 3 -> {
-                    DisplayUtil.print("Add new student");
+                    DisplayUtil.print("Add new student", true);
                     String name = InputUtil.getText("Enter name: ");
                     String gender = InputUtil.getText("Enter gender: ");
                     Double score = InputUtil.getDouble("Enter score: ");
                     Student newStudent = new Student(name, gender, score);
-                    studentDb.addStudent(newStudent);
+                    studentService.addStudent(newStudent);
                     DisplayUtil.showSuccessMsg("Student added");
                 }
                 case 4 -> {
-                    System.out.println("Update student by ID");
+                    DisplayUtil.print("Update student by ID", true);
                 }
                 case 5 -> {
-                    System.out.println("Delete student by ID");
+                    DisplayUtil.print("Delete student by ID", true);
                 }
                 case 0 -> System.exit(0);
                 default -> throw new IllegalStateException();

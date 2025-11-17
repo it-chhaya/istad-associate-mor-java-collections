@@ -5,6 +5,7 @@ public class Student {
     private String name;
     private String gender;
     private Double score;
+    private Boolean isActive;
 
     public Student() {}
 
